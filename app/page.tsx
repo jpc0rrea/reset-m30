@@ -264,9 +264,9 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className="container max-w-2xl mx-auto p-4 flex-none">
-        <h1 className="text-2xl font-bold text-center mb-6">Reset M30</h1>
+    <div className="flex flex-col h-screen ">
+      <div className="container max-w-2xl p-4 mx-auto flex-none">
+        <h1 className="text-2xl font-bold text-center mb-2">Reset M30</h1>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid grid-cols-3 w-full">
@@ -287,16 +287,12 @@ export default function HomePage() {
             <div className="p-4 overflow-y-auto h-[calc(100vh-11rem)]">
               {/* Dashboard Tab */}
               <TabsContent value="dashboard" className="space-y-4 mt-0">
-                <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+                <div className="flex justify-between items-center mb-4">
                   <div className="flex items-center gap-2">
                     <h2 className="text-xl font-semibold">{format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}</h2>
                   </div>
                   <div className="flex items-center gap-2">
-                  {!isToday(selectedDate) && (
-                      <Button variant="outline" size="sm" onClick={() => setSelectedDate(new Date())}>
-                        Ir para hoje
-                      </Button>
-                    )}
+                  
                     <Button 
                       variant="outline" 
                       size="sm"
