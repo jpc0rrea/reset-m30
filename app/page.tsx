@@ -287,9 +287,8 @@ export default function HomePage() {
             <div className="p-4 overflow-y-auto h-[calc(100vh-11rem)]">
               {/* Dashboard Tab */}
               <TabsContent value="dashboard" className="space-y-4 mt-0">
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
                   <div className="flex items-center gap-2">
-                   
                     <h2 className="text-xl font-semibold">{format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}</h2>
                   </div>
                   <div className="flex items-center gap-2">
@@ -352,10 +351,10 @@ export default function HomePage() {
                       <Card key={group.name}>
                         <CardContent className="p-4">
                           <div className="flex justify-between items-center mb-2">
-                            <div className="flex items-center gap-2">
-                            <h3 className="font-medium">{group.name}</h3>
+                            <div className="flex  items-center gap-2 w-[90%]">
+                              <h3 className="font-medium max-w-[calc(100%-100px)] sm:max-w-[250px] truncate" title={group.name}>{group.name}</h3>
                               {goal !== "" && (
-                                <span className={`text-xs px-2 py-0.5 rounded-full ${
+                                <span className={`text-[10px] px-2 py-0.5 rounded-full ${
                                   isOverGoal 
                                   ? "bg-amber-100 text-amber-800"
                                   : remaining > 0
@@ -366,12 +365,12 @@ export default function HomePage() {
                                     ? `+${(consumed - Number(goal)).toFixed(1).replace(/\.0$/, "")} extras`
                                     : remaining > 0
                                     ? `Faltam ${remaining.toFixed(1).replace(/\.0$/, "")}`
-                                    : "Meta atingida ✅"
+                                    : "Meta batida ✅"
                                   }
                                 </span>
                               )}
-                              </div>
-                              <span className="text-sm">
+                            </div>  
+                              <span className="text-sm min-w-max">
                                 {consumed.toFixed(1).replace(/\.0$/, "")} / {goal === "" ? "-" : goal.toFixed(1).replace(/\.0$/, "")}
                               </span>
                           </div>
