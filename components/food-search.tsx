@@ -93,14 +93,8 @@ export function FoodSearch({ onSelectFood }: FoodSearchProps) {
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="outline" className={`${getGroupColor(food.groupNumber)} text-white`}>
-              {food.groupNumber}
+              Grupo {food.groupNumber}
             </Badge>
-            {onSelectFood && (
-              <Button size="sm" variant="ghost" className="h-8 w-8 p-0" onClick={() => onSelectFood(food)}>
-                <Plus className="h-4 w-4" />
-                <span className="sr-only">Adicionar</span>
-              </Button>
-            )}
           </div>
         </div>
       </CardContent>
@@ -125,21 +119,6 @@ export function FoodSearch({ onSelectFood }: FoodSearchProps) {
           </Button>
         )}
       </div>
-
-      {searchTerm && (
-        <div className="mt-2 mb-4">
-          <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-            <TabsList className="w-full overflow-x-auto flex-nowrap">
-              <TabsTrigger value="all">Todos</TabsTrigger>
-              {Object.keys(groupedFoods).map((groupNumber) => (
-                <TabsTrigger key={groupNumber} value={groupNumber}>
-                  Grupo {groupNumber}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
-        </div>
-      )}
 
       {searchTerm && (
         <ScrollArea className="h-[500px] pr-4">
