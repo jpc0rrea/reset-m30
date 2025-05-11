@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Reset M30",
-  description: "App para rastrear porç˜ ",
+  description: "App para rastrear porções de alimentos",
     generator: 'jpc0rrea.dev'
 }
 
