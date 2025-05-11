@@ -123,22 +123,26 @@ export function MealDialog({
             )}
 
             {combinedGroups.map((group) => (
-              <div key={group.name} className="flex items-center gap-4" id={`food-group-${group.ids[0]}`}>
-                <div className={`w-3 h-3 rounded-full ${group.color}`}></div>
-                <Label className="flex-1">{group.name}</Label>
+              <div key={group.name} className="space-y-2" id={`food-group-${group.ids[0]}`}>
+                <div className="flex items-center gap-2">
+                  <div className={`w-3 h-3 rounded-full ${group.color}`}></div>
+                  <Label className="font-medium">{group.name}</Label>
+                </div>
                 {group.ids.length === 1 ? (
-                  <PortionInput
-                    className={`w-20 ${selectedFood && selectedFood.groupNumber === group.ids[0] ? "ring-2 ring-primary" : ""}`}
-                    value={getCurrentPortion(group.ids[0])}
-                    onChange={(value) => updatePortion(group.ids[0], value)}
-                  />
+                  <div className="pl-5">
+                    <PortionInput
+                      className={`w-full max-w-[200px] ${selectedFood && selectedFood.groupNumber === group.ids[0] ? "ring-2 ring-primary" : ""}`}
+                      value={getCurrentPortion(group.ids[0])}
+                      onChange={(value) => updatePortion(group.ids[0], value)}
+                    />
+                  </div>
                 ) : (
-                  <div className="grid grid-cols-2 gap-2 w-50">
+                  <div className="grid grid-cols-2 gap-4 pl-5">
                     {group.ids.map((id) => {
                       const subGroup = foodGroups.find((g) => g.id === id)
                       return (
-                        <div key={id} className="flex flex-col items-center">
-                          <Label className="text-xs mb-1">{subGroup?.name}</Label>
+                        <div key={id} className="space-y-1">
+                          <Label className="text-sm text-muted-foreground">{subGroup?.name}</Label>
                           <PortionInput
                             className={`w-full ${selectedFood && selectedFood.groupNumber === id ? "ring-2 ring-primary" : ""}`}
                             value={getCurrentPortion(id)}

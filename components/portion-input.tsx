@@ -1,6 +1,7 @@
 "use client"
 
 import { Input } from "@/components/ui/input"
+import { useState, useEffect } from "react"
 
 interface PortionInputProps {
   value: number | ""
@@ -9,22 +10,22 @@ interface PortionInputProps {
 }
 
 export function PortionInput({ value, onChange, className }: PortionInputProps) {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value
+  const [inputValue, setInputValue] = useState("")
 
-    // Allow empty input
-    if (input === "") {
+  useEffect(() => {
+    setInputValue(value === "" ? "" : String(value).replace(".", ","))
+  }, [value])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value
+    setInputValue(newValue)
+
+    if (newValue === "") {
       onChange("")
       return
     }
 
-    // Only allow numbers and one decimal point
-    if (!/^\d*\.?\d*$/.test(input)) {
-      return
-    }
-
-    // Convert to number if it's a valid number
-    const num = Number(input)
+    const num = Number(newValue.replace(",", "."))
     if (!isNaN(num)) {
       onChange(num)
     }
@@ -35,7 +36,7 @@ export function PortionInput({ value, onChange, className }: PortionInputProps) 
       type="text"
       inputMode="decimal"
       className={className}
-      value={value}
+      value={inputValue}
       onChange={handleChange}
     />
   )
