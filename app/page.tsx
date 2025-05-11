@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
-import { CalendarIcon, Settings, HomeIcon, Search } from "lucide-react"
+import { CalendarIcon, Settings, HomeIcon, Search, ChevronLeft, ChevronRight } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -289,29 +289,54 @@ export default function HomePage() {
               <TabsContent value="dashboard" className="space-y-4 mt-0">
                 <div className="flex justify-between items-center mb-4">
                   <div className="flex items-center gap-2">
-                    {!isToday(selectedDate) && (
+                   
+                    <h2 className="text-xl font-semibold">{format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}</h2>
+                  </div>
+                  <div className="flex items-center gap-2">
+                  {!isToday(selectedDate) && (
                       <Button variant="outline" size="sm" onClick={() => setSelectedDate(new Date())}>
                         Ir para hoje
                       </Button>
                     )}
-                    <h2 className="text-xl font-semibold">{format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}</h2>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        const prevDay = new Date(selectedDate)
+                        prevDay.setDate(prevDay.getDate() - 1)
+                        setSelectedDate(prevDay)
+                      }}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" size="sm">
+                          <CalendarIcon className="h-4 w-4 mr-2" />
+                          Data
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          selected={selectedDate}
+                          onSelect={(date) => date && setSelectedDate(date)}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        const nextDay = new Date(selectedDate)
+                        nextDay.setDate(nextDay.getDate() + 1)
+                        setSelectedDate(nextDay)
+                      }}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
                   </div>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" size="sm">
-                        <CalendarIcon className="h-4 w-4 mr-2" />
-                        Data
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={(date) => date && setSelectedDate(date)}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
                 </div>
 
                 {/* Progress Cards */}
@@ -350,7 +375,12 @@ export default function HomePage() {
                                 {consumed.toFixed(1).replace(/\.0$/, "")} / {goal === "" ? "-" : goal.toFixed(1).replace(/\.0$/, "")}
                               </span>
                           </div>
-                          <Progress value={progress} className={`h-2 ${group.color}`} />
+                          <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div 
+                              className={`absolute top-0 left-0 h-full ${group.color}`}
+                              style={{ width: `${progress}%` }}
+                            />
+                          </div>
                         </CardContent>
                       </Card>
                     )
