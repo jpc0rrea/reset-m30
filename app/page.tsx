@@ -264,12 +264,12 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex flex-col h-screen ">
+    <div className="flex flex-col h-screen">
       <div className="container max-w-2xl p-4 mx-auto flex-none">
         <h1 className="text-2xl font-bold text-center mb-2">Reset M30</h1>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid grid-cols-3 w-full">
+          <TabsList className="grid grid-cols-3 w-full sticky top-0 z-10">
             <TabsTrigger value="dashboard">
               <HomeIcon className="h-4 w-4 mr-2" />
               Hoje
@@ -284,178 +284,178 @@ export default function HomePage() {
             </TabsTrigger>
           </TabsList>
 
-            <div className="p-4 overflow-y-auto h-[calc(100vh-11rem)]">
-              {/* Dashboard Tab */}
-              <TabsContent value="dashboard" className="space-y-4 mt-0">
-                <div className="flex justify-between items-center mb-4">
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-xl font-semibold">{format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}</h2>
-                  </div>
-                  <div className="flex items-center gap-2">
-                  
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => {
-                        const prevDay = new Date(selectedDate)
-                        prevDay.setDate(prevDay.getDate() - 1)
-                        setSelectedDate(prevDay)
-                      }}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" size="sm">
-                          <CalendarIcon className="h-4 w-4 mr-2" />
-                          Data
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          selected={selectedDate}
-                          onSelect={(date) => date && setSelectedDate(date)}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => {
-                        const nextDay = new Date(selectedDate)
-                        nextDay.setDate(nextDay.getDate() + 1)
-                        setSelectedDate(nextDay)
-                      }}
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
+          <div className="p-4 overflow-y-auto max-h-[calc(100vh-11rem)]">
+            {/* Dashboard Tab */}
+            <TabsContent value="dashboard" className="space-y-4 mt-0">
+              <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-xl font-semibold">{format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}</h2>
                 </div>
+                <div className="flex items-center gap-2">
+                
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      const prevDay = new Date(selectedDate)
+                      prevDay.setDate(prevDay.getDate() - 1)
+                      setSelectedDate(prevDay)
+                    }}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        <CalendarIcon className="h-4 w-4 mr-2" />
+                        Data
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={(date) => date && setSelectedDate(date)}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      const nextDay = new Date(selectedDate)
+                      nextDay.setDate(nextDay.getDate() + 1)
+                      setSelectedDate(nextDay)
+                    }}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
 
-                {/* Progress Cards */}
-                <div className="space-y-4">
-                  {combinedGroups.map((group) => {
-                    const goal = goals[group.ids[0]]
-                    const consumed = getConsumedPortions(group.ids)
-                    const remaining = goal === "" ? 0 : Number(goal) - consumed
-                    const isOverGoal = consumed > Number(goal)
-                    const progress = goal === "" ? 0 : Math.min((consumed / Number(goal)) * 100, 100)
+              {/* Progress Cards */}
+              <div className="space-y-4">
+                {combinedGroups.map((group) => {
+                  const goal = goals[group.ids[0]]
+                  const consumed = getConsumedPortions(group.ids)
+                  const remaining = goal === "" ? 0 : Number(goal) - consumed
+                  const isOverGoal = consumed > Number(goal)
+                  const progress = goal === "" ? 0 : Math.min((consumed / Number(goal)) * 100, 100)
 
-                    return (
-                      <Card key={group.name}>
-                        <CardContent className="p-4">
-                          <div className="flex justify-between items-center mb-2">
-                            <div className="flex  items-center gap-2 w-[90%]">
-                              <h3 className="font-medium max-w-[calc(100%-100px)] sm:max-w-[250px] truncate" title={group.name}>{group.name}</h3>
-                              {goal !== "" && (
-                                <span className={`text-[10px] px-2 py-0.5 rounded-full ${
-                                  isOverGoal 
-                                  ? "bg-amber-100 text-amber-800"
+                  return (
+                    <Card key={group.name}>
+                      <CardContent className="p-4">
+                        <div className="flex justify-between items-center mb-2">
+                          <div className="flex  items-center gap-2 w-[90%]">
+                            <h3 className="font-medium max-w-[calc(100%-100px)] sm:max-w-[250px] truncate" title={group.name}>{group.name}</h3>
+                            {goal !== "" && (
+                              <span className={`text-[10px] px-2 py-0.5 rounded-full ${
+                                isOverGoal 
+                                ? "bg-amber-100 text-amber-800"
+                                : remaining > 0
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-green-100 text-green-800"
+                              }`}>
+                                {isOverGoal 
+                                  ? `+${(consumed - Number(goal)).toFixed(1).replace(/\.0$/, "")} extras`
                                   : remaining > 0
-                                  ? "bg-blue-100 text-blue-800"
-                                  : "bg-green-100 text-green-800"
-                                }`}>
-                                  {isOverGoal 
-                                    ? `+${(consumed - Number(goal)).toFixed(1).replace(/\.0$/, "")} extras`
-                                    : remaining > 0
-                                    ? `Faltam ${remaining.toFixed(1).replace(/\.0$/, "")}`
-                                    : "Meta batida ✅"
-                                  }
-                                </span>
-                              )}
-                            </div>  
-                              <span className="text-sm min-w-max">
-                                {consumed.toFixed(1).replace(/\.0$/, "")} / {goal === "" ? "-" : goal.toFixed(1).replace(/\.0$/, "")}
+                                  ? `Faltam ${remaining.toFixed(1).replace(/\.0$/, "")}`
+                                  : "Meta batida ✅"
+                                }
                               </span>
-                          </div>
-                          <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div 
-                              className={`absolute top-0 left-0 h-full ${group.color}`}
-                              style={{ width: `${progress}%` }}
-                            />
-                          </div>
-                        </CardContent>
-                      </Card>
-                    )
-                  })}
-                </div>
+                            )}
+                          </div>  
+                            <span className="text-sm min-w-max">
+                              {consumed.toFixed(1).replace(/\.0$/, "")} / {goal === "" ? "-" : goal.toFixed(1).replace(/\.0$/, "")}
+                            </span>
+                        </div>
+                        <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
+                          <div 
+                            className={`absolute top-0 left-0 h-full ${group.color}`}
+                            style={{ width: `${progress}%` }}
+                          />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )
+                })}
+              </div>
 
-                <div className="mt-6">
-                  <h3 className="font-semibold mb-2">
-                    {isToday(selectedDate) 
-                      ? "Refeições de Hoje" 
-                      : `Refeições de ${format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}`}
-                  </h3>
-                  {currentDayData?.meals.length === 0 ? (
-                    <p className="text-muted-foreground text-center py-4">Nenhuma refeição registrada hoje</p>
-                  ) : (
-                    <div className="space-y-3">
-                      {currentDayData?.meals
-                        .sort((a, b) => a.time.localeCompare(b.time))
-                        .map((meal) => (
-                          <Card key={meal.id}>
-                            <CardContent className="p-4">
-                              <div className="flex justify-between items-center mb-2">
-                                <div>
-                                  <h4 className="font-medium">{meal.type}</h4>
-                                  <p className="text-sm text-muted-foreground">{meal.time}</p>
-                                </div>
-                                <Button variant="ghost" size="sm" onClick={() => removeMeal(meal.id)}>
-                                  Remover
-                                </Button>
+              <div className="mt-6">
+                <h3 className="font-semibold mb-2">
+                  {isToday(selectedDate) 
+                    ? "Refeições de Hoje" 
+                    : `Refeições de ${format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}`}
+                </h3>
+                {currentDayData?.meals.length === 0 ? (
+                  <p className="text-muted-foreground text-center py-4">Nenhuma refeição registrada hoje</p>
+                ) : (
+                  <div className="space-y-3">
+                    {currentDayData?.meals
+                      .sort((a, b) => a.time.localeCompare(b.time))
+                      .map((meal) => (
+                        <Card key={meal.id}>
+                          <CardContent className="p-4">
+                            <div className="flex justify-between items-center mb-2">
+                              <div>
+                                <h4 className="font-medium">{meal.type}</h4>
+                                <p className="text-sm text-muted-foreground">{meal.time}</p>
                               </div>
-                              <div className="grid grid-cols-2 gap-2 mt-2">
-                                {meal.portions.map((portion) => {
-                                  const group = foodGroups.find((g) => g.id === portion.groupId)
-                                  return (
-                                    <div key={portion.groupId} className="flex items-center">
-                                      <div className={`w-3 h-3 rounded-full ${group?.color} mr-2`}></div>
-                                      <span className="text-sm">
-                                        {group?.name}: {portion.amount.toFixed(1).replace(/\.0$/, "")}
-                                      </span>
-                                    </div>
-                                  )
-                                })}
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
-                    </div>
-                  )}
-                </div>
-
-              </TabsContent>
-
-              {/* Search Tab */}
-              <TabsContent value="search" className="mt-0">
-                <div className="space-y-4">
-                  <h2 className="text-xl font-semibold mb-4">Pesquisar Alimentos</h2>
-                  <FoodSearch onSelectFood={handleAddFoodToMeal} />
-                </div>
-              </TabsContent>
-
-              {/* Settings Tab */}
-              <TabsContent value="settings" className="mt-0">
-                <div className="space-y-4">
-                  <h2 className="text-xl font-semibold mb-4">Metas Diárias</h2>
-                  <div className="space-y-4">
-                    {combinedGroups.map((group) => (
-                      <div key={group.name} className="flex items-center gap-4">
-                        <div className={`w-4 h-4 rounded-full ${group.color}`}></div>
-                        <Label className="flex-1">{group.name}</Label>
-                        <PortionInput
-                          className="w-20"
-                          value={goals[group.ids[0]]}
-                          onChange={(newValue) => updateGoal(group.ids[0], newValue)}
-                        />
-                      </div>
-                    ))}
+                              <Button variant="ghost" size="sm" onClick={() => removeMeal(meal.id)}>
+                                Remover
+                              </Button>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 mt-2">
+                              {meal.portions.map((portion) => {
+                                const group = foodGroups.find((g) => g.id === portion.groupId)
+                                return (
+                                  <div key={portion.groupId} className="flex items-center">
+                                    <div className={`w-3 h-3 rounded-full ${group?.color} mr-2`}></div>
+                                    <span className="text-sm">
+                                      {group?.name}: {portion.amount.toFixed(1).replace(/\.0$/, "")}
+                                    </span>
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
                   </div>
+                )}
+              </div>
+
+            </TabsContent>
+
+            {/* Search Tab */}
+            <TabsContent value="search" className="mt-0">
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold mb-4">Pesquisar Alimentos</h2>
+                <FoodSearch onSelectFood={handleAddFoodToMeal} />
+              </div>
+            </TabsContent>
+
+            {/* Settings Tab */}
+            <TabsContent value="settings" className="mt-0">
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold mb-4">Metas Diárias</h2>
+                <div className="space-y-4">
+                  {combinedGroups.map((group) => (
+                    <div key={group.name} className="flex items-center gap-4">
+                      <div className={`w-4 h-4 rounded-full ${group.color}`}></div>
+                      <Label className="flex-1">{group.name}</Label>
+                      <PortionInput
+                        className="w-20"
+                        value={goals[group.ids[0]]}
+                        onChange={(newValue) => updateGoal(group.ids[0], newValue)}
+                      />
+                    </div>
+                  ))}
                 </div>
-              </TabsContent>
-            </div>
+              </div>
+            </TabsContent>
+          </div>
         </Tabs>
       </div>
 
