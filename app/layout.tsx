@@ -7,9 +7,9 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Rastreador de Dieta",
-  description: "Aplicativo para rastrear porções de alimentos por grupo",
-    generator: 'v0.dev'
+  title: "Reset M30",
+  description: "App para rastrear porç˜ ",
+    generator: 'jpc0rrea.dev'
 }
 
 export default function RootLayout({
