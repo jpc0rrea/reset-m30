@@ -79,14 +79,14 @@ export function MealDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-[90%] sm:max-w-md max-h-[80vh] overflow-y-auto rounded-md">
         <DialogHeader>
           <DialogTitle>{isEditing ? "Editar Refeição" : "Nova Refeição"}</DialogTitle>
         </DialogHeader>
 
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
+        <div className="grid gap-2 py-2">
+          <div className="grid grid-cols-[1fr_100px] gap-2">
+            <div className="space-y-1">
               <Label htmlFor="meal-type">Tipo de Refeição</Label>
               <Select value={newMeal.type} onValueChange={(value) => setNewMeal({ ...newMeal, type: value })}>
                 <SelectTrigger id="meal-type">
@@ -101,7 +101,7 @@ export function MealDialog({
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1 max-w-[100px]">
               <Label htmlFor="meal-time">Horário</Label>
               <Input
                 id="meal-time"
@@ -112,7 +112,7 @@ export function MealDialog({
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-1">
             <Label htmlFor="meal-custom-name">Nome Personalizado (opcional)</Label>
             <Input
               id="meal-custom-name"
@@ -122,7 +122,7 @@ export function MealDialog({
             />
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-2">
             <h4 className="font-medium">Porções</h4>
             {selectedFood && (
               <div className="mb-4 p-3 border rounded-md bg-muted/30">
@@ -136,39 +136,40 @@ export function MealDialog({
               </div>
             )}
 
-            {combinedGroups.map((group) => (
-              <div key={group.name} className="space-y-2" id={`food-group-${group.ids[0]}`}>
-                <div className="flex items-center gap-2">
-                  <div className={`w-3 h-3 rounded-full ${group.color}`}></div>
-                  <Label className="font-medium">{group.name}</Label>
-                </div>
-                {group.ids.length === 1 ? (
-                  <div className="pl-5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {combinedGroups.flatMap((group) =>
+                group.ids.length === 1 ? (
+                  <div key={group.name} className="space-y-2" id={`food-group-${group.ids[0]}`}>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-3 h-3 rounded-full ${group.color}`}></div>
+                      <Label className="font-medium">{group.name}</Label>
+                    </div>
                     <PortionInput
-                      className={`w-full max-w-[200px] ${selectedFood && selectedFood.groupNumber === group.ids[0] ? "ring-2 ring-primary" : ""}`}
+                      className={`w-full ${selectedFood && selectedFood.groupNumber === group.ids[0] ? "ring-2 ring-primary" : ""}`}
                       value={getCurrentPortion(group.ids[0])}
                       onChange={(value) => updatePortion(group.ids[0], value)}
                     />
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 gap-4 pl-5">
-                    {group.ids.map((id) => {
-                      const subGroup = foodGroups.find((g) => g.id === id)
-                      return (
-                        <div key={id} className="space-y-1">
-                          <Label className="text-sm text-muted-foreground">{subGroup?.name}</Label>
-                          <PortionInput
-                            className={`w-full ${selectedFood && selectedFood.groupNumber === id ? "ring-2 ring-primary" : ""}`}
-                            value={getCurrentPortion(id)}
-                            onChange={(value) => updatePortion(id, value)}
-                          />
+                  group.ids.map((id) => {
+                    const subGroup = foodGroups.find((g) => g.id === id)
+                    return (
+                      <div key={id} className="space-y-2" id={`food-group-${id}`}>
+                        <div className="flex items-center gap-2">
+                          <div className={`w-3 h-3 rounded-full ${group.color}`}></div>
+                          <Label className="font-medium">{subGroup?.name}</Label>
                         </div>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
-            ))}
+                        <PortionInput
+                          className={`w-full ${selectedFood && selectedFood.groupNumber === id ? "ring-2 ring-primary" : ""}`}
+                          value={getCurrentPortion(id)}
+                          onChange={(value) => updatePortion(id, value)}
+                        />
+                      </div>
+                    )
+                  })
+                )
+              )}
+            </div>
           </div>
         </div>
 

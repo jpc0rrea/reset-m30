@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
-import { CalendarIcon, Settings, HomeIcon, Search, ChevronLeft, ChevronRight } from "lucide-react"
+import { CalendarIcon, Settings, HomeIcon, Search, ChevronLeft, ChevronRight, Pencil, Trash2, MoreVertical } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -18,6 +18,12 @@ import { FoodSearch } from "@/components/food-search"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import type { Food } from "@/data/foods"
 import { PortionInput } from "@/components/portion-input"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 // Modificar a definição dos grupos de alimentos para indicar quais estão agrupados
 const foodGroups = [
@@ -32,8 +38,8 @@ const foodGroups = [
 // Definir os grupos combinados para exibição
 const combinedGroups = [
   { name: "Proteínas", ids: [4], color: "bg-rose-500" },
-  { name: "Frutas & Pães/Fibras", ids: [9, 12], color: "bg-amber-500" },
   { name: "Cereais/Feijões", ids: [5], color: "bg-emerald-500" },
+  { name: "Frutas & Pães/Fibras", ids: [9, 12], color: "bg-amber-500" },
   { name: "Gorduras Boas & Laticínios", ids: [11, 13], color: "bg-sky-500" },
 ]
 
@@ -417,7 +423,7 @@ export default function HomePage() {
                       .map((meal) => (
                         <Card key={meal.id}>
                           <CardContent className="p-4">
-                            <div className="flex justify-between items-center mb-2">
+                            <div className="flex justify-between items-top mb-2">
                               <div>
                                 <h4 className="font-medium">
                                   {meal.customName ? (
@@ -428,14 +434,23 @@ export default function HomePage() {
                                 </h4>
                                 <p className="text-sm text-muted-foreground">{meal.time}</p>
                               </div>
-                              <div className="flex gap-2">
-                                <Button variant="ghost" size="sm" onClick={() => editMeal(meal)}>
-                                  Editar
-                                </Button>
-                                <Button variant="ghost" size="sm" onClick={() => removeMeal(meal.id)}>
-                                  Remover
-                                </Button>
-                              </div>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="outline" size="icon" className="h-7 w-7">
+                                    <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem onClick={() => editMeal(meal)}>
+                                    <Pencil className="h-4 w-4 mr-2" />
+                                    Editar
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => removeMeal(meal.id)} className="text-red-600">
+                                    <Trash2 className="h-4 w-4 mr-2" />
+                                    Remover
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
                             </div>
                             <div className="grid grid-cols-2 gap-2 mt-2">
                               {meal.portions.map((portion) => {
