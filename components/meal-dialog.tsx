@@ -19,12 +19,14 @@ interface MealDialogProps {
   newMeal: {
     type: string
     time: string
+    customName?: string
     portions: { groupId: number; amount: number | "" }[]
   }
   setNewMeal: React.Dispatch<
     React.SetStateAction<{
       type: string
       time: string
+      customName?: string
       portions: { groupId: number; amount: number | "" }[]
     }>
   >
@@ -42,6 +44,7 @@ interface MealDialogProps {
     group: string
   }[]
   selectedFood: Food | null
+  isEditing?: boolean
 }
 
 export function MealDialog({
@@ -56,6 +59,7 @@ export function MealDialog({
   updatePortion,
   foodGroups,
   selectedFood,
+  isEditing = false,
 }: MealDialogProps) {
   // Efeito para destacar o alimento selecionado, se houver
   useEffect(() => {
@@ -77,7 +81,7 @@ export function MealDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Nova Refeição</DialogTitle>
+          <DialogTitle>{isEditing ? "Editar Refeição" : "Nova Refeição"}</DialogTitle>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
@@ -106,6 +110,16 @@ export function MealDialog({
                 onChange={(e) => setNewMeal({ ...newMeal, time: e.target.value })}
               />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="meal-custom-name">Nome Personalizado (opcional)</Label>
+            <Input
+              id="meal-custom-name"
+              placeholder="Ex: Ganache, Mingau proteíco..."
+              value={newMeal.customName || ""}
+              onChange={(e) => setNewMeal({ ...newMeal, customName: e.target.value })}
+            />
           </div>
 
           <div className="space-y-4">

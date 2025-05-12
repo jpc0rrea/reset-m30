@@ -50,6 +50,7 @@ interface Meal {
   id: string
   type: string
   time: string
+  customName?: string
   portions: {
     groupId: number
     amount: number
@@ -87,15 +88,18 @@ export default function HomePage() {
   const [newMeal, setNewMeal] = useState<{
     type: string
     time: string
+    customName?: string
     portions: { groupId: number; amount: number | "" }[]
   }>({
     type: "Café da Manhã",
     time: "08:00",
+    customName: "",
     portions: [],
   })
   const [mealDialogOpen, setMealDialogOpen] = useState(false)
   const [activeTab, setActiveTab] = useState("dashboard")
   const [selectedFood, setSelectedFood] = useState<Food | null>(null)
+  const [editingMealId, setEditingMealId] = useState<string | null>(null)
 
   // Carregar dados do localStorage na inicialização
   useEffect(() => {
@@ -151,7 +155,19 @@ export default function HomePage() {
     }, 0)
   }
 
-  // Adicionar nova refeição
+  // Add edit meal function
+  const editMeal = (meal: Meal) => {
+    setEditingMealId(meal.id)
+    setNewMeal({
+      type: meal.type,
+      time: meal.time,
+      customName: meal.customName || "",
+      portions: meal.portions.map(p => ({ ...p, amount: p.amount })),
+    })
+    setMealDialogOpen(true)
+  }
+
+  // Update addMeal function to handle editing
   const addMeal = () => {
     if (!currentDayData) return
 
@@ -169,15 +185,18 @@ export default function HomePage() {
     }
 
     const meal: Meal = {
-      id: Date.now().toString(),
+      id: editingMealId || Date.now().toString(),
       type: newMeal.type,
       time: newMeal.time,
+      customName: newMeal.customName,
       portions: validPortions,
     }
 
     const updatedDayData = {
       ...currentDayData,
-      meals: [...currentDayData.meals, meal],
+      meals: editingMealId
+        ? currentDayData.meals.map(m => m.id === editingMealId ? meal : m)
+        : [...currentDayData.meals, meal],
     }
 
     // Atualizar o array de dias
@@ -190,9 +209,10 @@ export default function HomePage() {
     setNewMeal({
       type: "Café da Manhã",
       time: "08:00",
+      customName: "",
       portions: [],
     })
-
+    setEditingMealId(null)
     setMealDialogOpen(false)
   }
 
@@ -399,12 +419,23 @@ export default function HomePage() {
                           <CardContent className="p-4">
                             <div className="flex justify-between items-center mb-2">
                               <div>
-                                <h4 className="font-medium">{meal.type}</h4>
+                                <h4 className="font-medium">
+                                  {meal.customName ? (
+                                    <span title={meal.type}>{meal.customName}</span>
+                                  ) : (
+                                    meal.type
+                                  )}
+                                </h4>
                                 <p className="text-sm text-muted-foreground">{meal.time}</p>
                               </div>
-                              <Button variant="ghost" size="sm" onClick={() => removeMeal(meal.id)}>
-                                Remover
-                              </Button>
+                              <div className="flex gap-2">
+                                <Button variant="ghost" size="sm" onClick={() => editMeal(meal)}>
+                                  Editar
+                                </Button>
+                                <Button variant="ghost" size="sm" onClick={() => removeMeal(meal.id)}>
+                                  Remover
+                                </Button>
+                              </div>
                             </div>
                             <div className="grid grid-cols-2 gap-2 mt-2">
                               {meal.portions.map((portion) => {
@@ -479,6 +510,7 @@ export default function HomePage() {
         updatePortion={updatePortion}
         foodGroups={foodGroups}
         selectedFood={selectedFood}
+        isEditing={editingMealId !== null}
       />
     </div>
   )
