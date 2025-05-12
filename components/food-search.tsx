@@ -1,14 +1,13 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search, Plus } from "lucide-react"
+import { Search } from "lucide-react"
 import { type Food, foods } from "@/data/foods"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface FoodSearchProps {
   onSelectFood?: (food: Food) => void
@@ -139,7 +138,6 @@ export function FoodSearch({ onSelectFood }: FoodSearchProps) {
           </CardHeader>
           <CardContent className="text-center text-muted-foreground">
             <p className="mb-4">Digite o nome de um alimento para ver detalhes sobre porções e pesos</p>
-            <p className="text-sm">Clique no botão + para adicionar o alimento à sua refeição</p>
           </CardContent>
         </Card>
       )}

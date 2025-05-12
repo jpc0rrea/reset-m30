@@ -3,19 +3,17 @@
 import { useEffect, useState } from "react"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
-import { CalendarIcon, Settings, HomeIcon, Search, ChevronLeft, ChevronRight, Pencil, Trash2, MoreVertical } from "lucide-react"
+import { CalendarIcon, HomeIcon, Search, ChevronLeft, ChevronRight, Pencil, Trash2, MoreVertical, CalendarCheck, NotebookText } from "lucide-react"
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { MealDialog } from "@/components/meal-dialog"
 import { FoodSearch } from "@/components/food-search"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import type { Food } from "@/data/foods"
 import { PortionInput } from "@/components/portion-input"
 import {
@@ -186,7 +184,7 @@ export default function HomePage() {
       }))
 
     if (validPortions.length === 0) {
-      alert("Adicione pelo menos uma porção de alimento.")
+      toast.error("Adicione pelo menos uma porção de alimento.")
       return
     }
 
@@ -220,6 +218,13 @@ export default function HomePage() {
     })
     setEditingMealId(null)
     setMealDialogOpen(false)
+
+    // Show toast notification
+    if (editingMealId) {
+      toast.success("Refeição atualizada com sucesso!")
+    } else {
+      toast.success("Refeição adicionada com sucesso!")
+    }
   }
 
   // Remover uma refeição
@@ -237,6 +242,8 @@ export default function HomePage() {
     const updatedDays = dayData.filter((day) => day.date !== dateString)
     setDayData([...updatedDays, updatedDayData])
     setCurrentDayData(updatedDayData)
+
+    toast.success("Refeição removida com sucesso!")
   }
 
   // Modificar a função updateGoal para usar parseFloat
@@ -297,16 +304,16 @@ export default function HomePage() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid grid-cols-3 w-full sticky top-0 z-10">
             <TabsTrigger value="dashboard">
-              <HomeIcon className="h-4 w-4 mr-2" />
-              Hoje
+              <NotebookText className="h-4 w-4 mr-2" />
+              Diário
             </TabsTrigger>
             <TabsTrigger value="search">
               <Search className="h-4 w-4 mr-2" />
               Alimentos
             </TabsTrigger>
             <TabsTrigger value="settings">
-              <Settings className="h-4 w-4 mr-2" />
-              Configurações
+              <CalendarCheck className="h-4 w-4 mr-2" />
+              Meta
             </TabsTrigger>
           </TabsList>
 
@@ -315,7 +322,25 @@ export default function HomePage() {
             <TabsContent value="dashboard" className="space-y-4 mt-0">
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-semibold">{format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}</h2>
+                  <h2 className="text-xl font-semibold">
+                    {(() => {
+                      const today = new Date()
+                      const isYesterday = selectedDate.getDate() === today.getDate() - 1 && 
+                        selectedDate.getMonth() === today.getMonth() &&
+                        selectedDate.getFullYear() === today.getFullYear()
+                      const isToday = selectedDate.getDate() === today.getDate() && 
+                        selectedDate.getMonth() === today.getMonth() &&
+                        selectedDate.getFullYear() === today.getFullYear()
+                      const isTomorrow = selectedDate.getDate() === today.getDate() + 1 &&
+                        selectedDate.getMonth() === today.getMonth() &&
+                        selectedDate.getFullYear() === today.getFullYear()
+                      
+                      if (isYesterday) return "Ontem"
+                      if (isToday) return "Hoje"
+                      if (isTomorrow) return "Amanhã"
+                      return format(selectedDate, "dd 'de' MMMM", { locale: ptBR })
+                    })()}
+                  </h2>
                 </div>
                 <div className="flex items-center gap-2">
                 
@@ -436,7 +461,7 @@ export default function HomePage() {
                               </div>
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                  <Button variant="outline" size="icon" className="h-7 w-7">
+                                  <Button variant="outline" size="icon" className="h-7 w-7 min-w-7">
                                     <MoreVertical className="h-4 w-4" />
                                   </Button>
                                 </DropdownMenuTrigger>

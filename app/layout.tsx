@@ -10,20 +10,25 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Reset M30",
   description: "App para rastrear porções de alimentos",
-    generator: 'jpc0rrea.dev'
+  generator: 'jpc0rrea.dev'
 }
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           {children}
-          <Toaster />
+          <Toaster position="top-center" />
         </ThemeProvider>
       </body>
     </html>
